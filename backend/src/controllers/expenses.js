@@ -1,9 +1,9 @@
 // import { Request, Response, NextFunction } from "express";
-import { ExpenseModel } from "../models/schema.js";
-
-export async function getExpense(_req, res, next) {
+import { ExpenseModel } from "../models/ExpenseSchema.js";
+import { Types } from "mongoose";
+export async function getExpense(req, res, next) {
   try {
-    const docs = await ExpenseModel.find();
+    const docs = await ExpenseModel.find({ userId: req.user.id });
     res.json(docs);
   } catch (err) {
     next(err);
@@ -12,10 +12,40 @@ export async function getExpense(_req, res, next) {
 
 export async function createExpense(req, res, next) {
   try {
-    const newExpense = new ExpenseModel(req.body);
+    const { amount, description = "", category, date } = req.body;
+    const amountNum = Number(amount);
+
+    if (!category) {
+      return res.status(400).json({ message: "Category is required" });
+    }
+
+    if (isNaN(amountNum)) {
+      return res.status(400).json({ message: "Amount must be a number" });
+    }
+
+    if (!date || isNaN(Date.parse(date))) {
+      return res.status(400).json({ message: "Valid date is required" });
+    }
+
+    // Convert string user id to ObjectId correctly:
+    const userId = Types.ObjectId.createFromHexString(req.user.id);
+
+    const newExpense = new ExpenseModel({
+      userId,
+      amount: amountNum,
+      description,
+      category,
+      date: new Date(date),
+    });
+
     const saved = await newExpense.save();
     res.status(201).json(saved);
   } catch (err) {
+    if (err.name === "ValidationError") {
+      return res
+        .status(400)
+        .json({ message: "Validation failed", details: err.errors });
+    }
     next(err);
   }
 }
@@ -62,15 +92,17 @@ export async function getSummary(req, res, next) {
 }
 
 export async function getCategories(req, res, next) {
+  console.log("Headers:", req.headers);
+  console.log("User ID from token:", req.user?.id);
   try {
     const categories = [
-      "rent",
-      "groceries",
-      "utilities",
-      "insurance",
-      "food",
-      "shopping",
-      "others",
+      "Rent",
+      "Groceries",
+      "Utilities",
+      "Insurance",
+      "Food",
+      "Shopping",
+      "Others",
     ];
     res.json(categories);
   } catch (err) {

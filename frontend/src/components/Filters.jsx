@@ -29,7 +29,7 @@ const Filters = ({
   }, []);
 
   return (
-    <div className="bg-white p-4 rounded-md mb-6 mt-4">
+    <div className="bg-white p-4 rounded-md mb-6 mt-4   ">
       <h3 className="text-lg font-semibold mb-2">Filter & Sort Expenses</h3>
 
       <div className="flex flex-wrap gap-4">

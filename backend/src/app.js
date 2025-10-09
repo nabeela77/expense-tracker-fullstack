@@ -2,13 +2,13 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import router from "./routes/router.js";
-
+import expenseRouter from "./routes/ExpenseRouter.js";
+import { SignUpRouter } from "./routes/SignUpRouter.js";
+import { loginRouter } from "./routes/LoginRouter.js";
 export const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Health Check
 app.get("/health", (req, res) => {
   const mongoState = mongoose.connection.readyState;
   res.json({
@@ -16,8 +16,9 @@ app.get("/health", (req, res) => {
     mongo: mongoState === 1 ? "connected" : "not-connected",
   });
 });
-
-app.use("/api/expenses", router);
+app.use("/api/auth", SignUpRouter);
+app.use("/api/auth", loginRouter);
+app.use("/api/expenses", expenseRouter);
 
 app.use((_req, res, _next) => {
   res.status(404).json({ error: "endpoint not found" });

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { updateExpense, deleteExpense } from "../../api/api.js";
 
-const ExpenseList = ({ formValues, setFormValues }) => {
+const ExpenseList = ({ formValues, setFormValues, categories }) => {
   const [editingId, setEditingId] = useState(null);
   const [notification, setNotification] = useState({ type: "", message: "" });
 
@@ -101,13 +101,12 @@ const ExpenseList = ({ formValues, setFormValues }) => {
                         handleUpdate(expense.id, "category", e.target.value)
                       }
                     >
-                      <option value="rent">Rent</option>
-                      <option value="groceries">Groceries</option>
-                      <option value="utilities">Utilities</option>
-                      <option value="insurance">Insurance</option>
-                      <option value="food">Food</option>
-                      <option value="shopping">Shopping</option>
-                      <option value="others">Others</option>
+                      <option value="select"> Select Category </option>
+                      {categories.map((cat, idx) => (
+                        <option key={idx} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
                     </select>
                   </label>
 
@@ -186,7 +185,7 @@ const ExpenseList = ({ formValues, setFormValues }) => {
                     Edit
                   </button>
                   <button
-                    className="bg-red-400 hover:bg-red-500 text-white font-semibold py-2 px-6 rounded-xl mb-8"
+                    className="bg-red-300 hover:bg-red-400 text-black font-semibold py-2 px-6 rounded-xl mb-8 cursor-pointer"
                     onClick={() => handleDelete(expense.id)}
                   >
                     Delete

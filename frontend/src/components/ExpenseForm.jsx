@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
-const ExpenseForm = ({ onSubmit, setShowForm }) => {
+
+const ExpenseForm = ({ onSubmit, setShowForm, categories }) => {
   //   const [inputData, setInputData] = useState([]);
   //   const [form, setForm] = useState([]);
   //   console.log(form);
@@ -41,7 +42,7 @@ const ExpenseForm = ({ onSubmit, setShowForm }) => {
 
   return (
     <div>
-      <h2 className="font-bold text-xl mb-4 !ml-0">Add Expenses:</h2>
+      <h2 className="font-bold text-xl mb-4 !ml-0">Add Expense:</h2>
       {/* Add Expense Button */}
       {/* <button className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-6 rounded-xl mb-8">
         Add Expense
@@ -69,16 +70,14 @@ const ExpenseForm = ({ onSubmit, setShowForm }) => {
             id="category"
             name="category"
             required
-            className="w-full border border-gray-300 p-2 rounded-md text-lg"
+            className="w-full border border-gray-300 p-2 rounded-md text-lg" //usegetCtegories api
           >
-            <option value="">Select Category</option>
-            <option value="rent">Rent</option>
-            <option value="groceries">Groceries</option>
-            <option value="utilities">Utilities</option>
-            <option value="insurance">Insurance</option>
-            <option value="food">Food</option>
-            <option value="shopping">Shopping</option>
-            <option value="others">Others</option>
+            <option value="select">Select Category</option>
+            {categories.map((cat, idx) => (
+              <option key={idx} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -109,7 +108,7 @@ const ExpenseForm = ({ onSubmit, setShowForm }) => {
         <div>
           <label className="block mb-1 font-medium text-lg">Date</label>
           <input
-            type="date"
+            type="datetime-local"
             name="date"
             required
             className="w-full border border-gray-300 p-2 rounded-md text-lg"
