@@ -1,35 +1,27 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/api.js";
 import { useExpenses } from "../context/ExpenseContext.jsx";
 // import { useRecovery } from "../context/RecoveryContext.jsx";
-
+import { useState } from "react";
 const Login = () => {
+  const { login, email, setEmail, password, setPassword } = useExpenses();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const { login, email, setEmail, password, setPassword } = useExpenses();
-
-  // const { page, setPage, email, setEmail, password, setPassword } =
-  //   useRecovery();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
     setSuccess("");
 
     try {
-      const res = await loginUser({ email, password });
-
-      const rawToken = res.token.startsWith("Bearer ")
-        ? res.token.slice(7)
-        : res.token;
-
-      login(rawToken);
+      await loginUser({ email, password });
+      await login(localStorage.getItem("token"));
       setSuccess("Logged in successfully!");
       setEmail("");
       setPassword("");
-      setTimeout(() => navigate("/"), 1000);
+      navigate("/");
     } catch (err) {
       const message =
         err.response?.data?.message || "Login failed. Please try again.";

@@ -85,5 +85,5 @@ export async function loginUser(userData) {
   // console.log("Logged in data recieved", userData);
   // console.log("res data", res.data);
   localStorage.setItem("token", rawToken);
-  return res.data;
+  return rawToken;
 }

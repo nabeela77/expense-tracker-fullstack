@@ -44,8 +44,8 @@ export const ExpenseProvider = ({ children }) => {
   }, [token]);
 
   // Fetch expenses + summary when token changes
-  const fetchAll = async () => {
-    if (!token) {
+  const fetchAll = async (authToken = token) => {
+    if (!authToken) {
       setFormValues([]); // Clear expenses if no token
       return;
     }
@@ -76,10 +76,11 @@ export const ExpenseProvider = ({ children }) => {
   }, [token]);
 
   // Login function to update token
-  const login = (newToken) => {
+  const login = async (newToken) => {
     setFormValues([]);
     localStorage.setItem("token", newToken);
     setToken(newToken);
+    await fetchAll(newToken);
   };
 
   // Logout clears token and data
