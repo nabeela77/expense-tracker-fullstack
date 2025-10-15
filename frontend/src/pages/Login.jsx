@@ -2,16 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/api.js";
 import { useExpenses } from "../context/ExpenseContext.jsx";
-import { useRecovery } from "../context/RecoveryContext.jsx";
+// import { useRecovery } from "../context/RecoveryContext.jsx";
 
 const Login = () => {
-  // const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const { login } = useExpenses();
+  const { login, email, setEmail, password, setPassword } = useExpenses();
 
-  const { page, setPage, email, setEmail, password, setPassword } =
-    useRecovery();
+  // const { page, setPage, email, setEmail, password, setPassword } =
+  //   useRecovery();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

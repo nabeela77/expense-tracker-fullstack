@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import { ExpenseProvider } from "./context/ExpenseContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoutes.jsx";
-import { RecoveryProvider } from "./context/RecoveryContext.jsx";
+// import { RecoveryProvider } from "./context/RecoveryContext.jsx";
 const isAuthenticated = !!localStorage.getItem("token");
 
 createRoot(document.getElementById("root")).render(
@@ -35,9 +35,9 @@ createRoot(document.getElementById("root")).render(
             <Route
               path="login"
               element={
-                <RecoveryProvider>
-                  <Login />
-                </RecoveryProvider>
+                // <RecoveryProvider>
+                <Login />
+                // </RecoveryProvider>
               }
             />
           </Route>

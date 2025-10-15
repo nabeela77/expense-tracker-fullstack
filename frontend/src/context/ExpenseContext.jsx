@@ -19,7 +19,8 @@ export const ExpenseProvider = ({ children }) => {
   const [endDate, setEndDate] = useState("");
   const [sortBy, setSortBy] = useState("date");
   const [sortOrder, setSortOrder] = useState("asc");
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false); // ADD loading state
   const [error, setError] = useState(null); // ADD error state
 
@@ -53,7 +54,7 @@ export const ExpenseProvider = ({ children }) => {
     setError(null);
 
     try {
-      const [expenseData, summaryData] = await Promise.all([
+      const [expenseData] = await Promise.all([
         getExpense(token),
         getSummary(token),
       ]);
@@ -173,6 +174,10 @@ export const ExpenseProvider = ({ children }) => {
         fetchAll,
         loading,
         error,
+        email,
+        setEmail,
+        password,
+        setPassword,
       }}
     >
       {children}
