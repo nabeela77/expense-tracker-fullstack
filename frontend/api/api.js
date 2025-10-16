@@ -7,14 +7,31 @@ const LOGIN_API_URL = `${BASE_URL}/auth/login`;
 
 const authAxios = axios.create();
 
+// ✅ Attach JWT token to each request
 authAxios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
+
+authAxios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.response &&
+      (error.response.status === 401 ||
+        error.response.data.message === "Session expired. Please login again.")
+    ) {
+      localStorage.removeItem("token");
+      window.location.href = "/login"; // redirect user to login page
+    }
+    return Promise.reject(error);
+  }
+);
 
 //home api
 export async function getExpense() {

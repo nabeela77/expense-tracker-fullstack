@@ -55,12 +55,13 @@ export const ExpenseProvider = ({ children }) => {
 
     try {
       const [expenseData] = await Promise.all([
-        getExpense(token),
-        getSummary(token),
+        getExpense(authToken),
+        getSummary(authToken),
       ]);
 
       const expenses = expenseData.expenses ?? expenseData;
       setFormValues(expenses);
+      return expenses;
     } catch (err) {
       console.error("Failed to fetch expenses:", err);
       setError("Failed to load expenses");
@@ -77,11 +78,18 @@ export const ExpenseProvider = ({ children }) => {
 
   // Login function to update token
   const login = async (newToken) => {
-    setFormValues([]);
     localStorage.setItem("token", newToken);
     setToken(newToken);
-    await fetchAll(newToken);
+
+    const fetchedExpenses = await fetchAll(newToken);
+    console.log("Fetched expenses after login:", fetchedExpenses);
+
+    return fetchedExpenses; // Important for post-login behavior
   };
+
+  useEffect(() => {
+    console.log("formValues updated:", formValues);
+  }, [formValues]);
 
   // Logout clears token and data
   const logout = () => {

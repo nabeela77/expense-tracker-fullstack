@@ -4,11 +4,31 @@ import { useExpenses } from "../context/ExpenseContext.jsx";
 // import { useRecovery } from "../context/RecoveryContext.jsx";
 import { useState } from "react";
 const Login = () => {
-  const { login, email, setEmail, password, setPassword } = useExpenses();
+  const { login, email, setEmail, password, setPassword, expense, setExpense } =
+    useExpenses();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   setError("");
+  //   setSuccess("");
+
+  //   try {
+  //     await loginUser({ email, password });
+  //     await login(localStorage.getItem("token"));
+  //     setSuccess("Logged in successfully!");
+  //     setEmail("");
+  //     setPassword("");
+  //     navigate("/");
+  //   } catch (err) {
+  //     const message =
+  //       err.response?.data?.message || "Login failed. Please try again.";
+  //     setError(message);
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -16,15 +36,25 @@ const Login = () => {
     setSuccess("");
 
     try {
-      await loginUser({ email, password });
-      await login(localStorage.getItem("token"));
+      // 1. Get the token (returned as a string)
+      const token = await loginUser({ email, password });
+
+      // 2. Login with token — this fetches expenses
+      const expenses = await login(token);
+
       setSuccess("Logged in successfully!");
       setEmail("");
       setPassword("");
-      navigate("/");
+
+      // 3. Optional: Only navigate if login was successful
+      if (expenses.length >= 0) {
+        navigate("/dashboard");
+      }
     } catch (err) {
       const message =
-        err.response?.data?.message || "Login failed. Please try again.";
+        err.response?.data?.message ||
+        err.message ||
+        "Login failed. Please try again.";
       setError(message);
     }
   };

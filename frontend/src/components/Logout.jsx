@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
+import { useExpenses } from "../context/ExpenseContext";
 export function Logout() {
   const navigate = useNavigate();
-
+  const { logout } = useExpenses();
   const handleLogout = () => {
-    localStorage.removeItem("token");
     navigate("/login");
+    logout();
   };
 
   return (
