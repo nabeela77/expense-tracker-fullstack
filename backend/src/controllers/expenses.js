@@ -1,6 +1,7 @@
 // import { Request, Response, NextFunction } from "express";
 import { ExpenseModel } from "../models/ExpenseSchema.js";
 import { Types } from "mongoose";
+
 export async function getExpense(req, res, next) {
   try {
     const docs = await ExpenseModel.find({ userId: req.user.id });

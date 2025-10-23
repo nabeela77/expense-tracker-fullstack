@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import expenseRouter from "./routes/ExpenseRouter.js";
 import { SignUpRouter } from "./routes/SignUpRouter.js";
 import { loginRouter } from "./routes/LoginRouter.js";
+
 export const app = express();
 app.use(cors());
 app.use(express.json());

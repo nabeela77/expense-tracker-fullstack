@@ -82,14 +82,10 @@ export const ExpenseProvider = ({ children }) => {
     setToken(newToken);
 
     const fetchedExpenses = await fetchAll(newToken);
-    console.log("Fetched expenses after login:", fetchedExpenses);
+    // console.log("Fetched expenses after login:", fetchedExpenses);
 
     return fetchedExpenses; // Important for post-login behavior
   };
-
-  useEffect(() => {
-    console.log("formValues updated:", formValues);
-  }, [formValues]);
 
   // Logout clears token and data
   const logout = () => {
@@ -97,6 +93,8 @@ export const ExpenseProvider = ({ children }) => {
     setToken(null);
     setFormValues([]);
     setCategories([]);
+
+    console.error("Token expired login again.");
   };
 
   // CRUD handlers updated to use token

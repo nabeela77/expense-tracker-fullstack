@@ -5,7 +5,9 @@ const EXPENSE_URL = `${BASE_URL}/expenses`;
 const SIGNUP_API_URL = `${BASE_URL}/auth/signup`;
 const LOGIN_API_URL = `${BASE_URL}/auth/login`;
 
-const authAxios = axios.create();
+const authAxios = axios.create({
+  baseURL: BASE_URL,
+});
 
 // ✅ Attach JWT token to each request
 authAxios.interceptors.request.use((config) => {
@@ -103,4 +105,33 @@ export async function loginUser(userData) {
   // console.log("res data", res.data);
   localStorage.setItem("token", rawToken);
   return rawToken;
+}
+
+export const exportExpenses = async (format) => {
+  const res = await authAxios.get(`/expenses/export?format=${format}`, {
+    responseType: "blob", // crucial for downloading files
+  });
+  return res;
+};
+
+export async function importExpenses(file) {
+  if (!file) throw new Error("No file provided");
+
+  const formData = new FormData();
+  formData.append("uploadFile", file);
+
+  try {
+    const res = await authAxios.post(`${EXPENSE_URL}/import`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(
+      "Failed to import expenses:",
+      error.response || error.message
+    );
+    throw error;
+  }
 }
